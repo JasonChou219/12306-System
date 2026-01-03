@@ -7,9 +7,8 @@ import org.springframework.core.env.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @SpringBootApplication
-@ComponentScan(basePackages = "com.example.train.member")
+@ComponentScan(basePackages = {"com.example.train.member", "com.example.train.common"})
 public class MemberApplication {
 
 
