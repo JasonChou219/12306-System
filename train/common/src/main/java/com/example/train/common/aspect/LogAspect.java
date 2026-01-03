@@ -1,4 +1,4 @@
-package com.example.train.member.aspect;
+package com.example.train.common.aspect;
 
 import jakarta.annotation.PostConstruct;
 
@@ -33,7 +33,7 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 @Component
 public class LogAspect {
     public LogAspect() {
-        System.out.println("LogAspect constructor");
+        System.out.println("Common LogAspect constructor");
     }
 
     private final static Logger logger = LoggerFactory.getLogger(LogAspect.class);
@@ -113,7 +113,7 @@ public class LogAspect {
         SimplePropertyPreFilter filter = new SimplePropertyPreFilter();
         filter.getExcludes().addAll(Arrays.asList(excludeProperties));
         logger.info("返回结果: {}", JSON.toJSONString(result, filter));
-        logger.info("请求结束，耗时: {}ms", System.currentTimeMillis() - startTime);
+        logger.info("-------------请求结束，耗时: {}ms-------------", System.currentTimeMillis() - startTime);
         return result;
     }
 }

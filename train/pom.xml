@@ -72,6 +72,17 @@
 				<artifactId>hutool-all</artifactId>	
 				<version>5.6.3</version>
 			</dependency>
+			<dependency>
+				<groupId>com.example</groupId>
+				<artifactId>common</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+			<!-- 添加spring-boot-starter-aop -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-aop</artifactId>
+				<version>3.0.0</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -85,6 +96,7 @@
 	</build> -->
 	<modules>
     	<module>member</module>
+	  	<module>common</module>
 	</modules>
 
 </project>
