@@ -1,11 +1,9 @@
 package com.example.train.member.aspect;
 
 import jakarta.annotation.PostConstruct;
-import java.net.http.HttpClient;
 
-import javax.sound.midi.MidiChannel;
 import java.util.UUID;
-
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +12,21 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Component;
-
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.PropertyPreFilters;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+
+
+
 
 
 @Aspect
@@ -79,11 +83,18 @@ public class LogAspect {
             arguments[i] = args[i];
         }
         // 排除字段，敏感字段或者太长的字段不显示：身份证，手机号，邮箱，密码
+        // String[] excludeProperties = {"idCard", "phone", "email", "password"};
+        // PropertyPreFilters filters = new PropertyPreFilters();
+        // PropertyPreFilter.MySimplePropertyFilter excludefilter = filters.addFilter(0, excludeProperties);
+        // excludefilter.addExcludes(excludeProperties);
+        // logger.info("请求参数: {}", JSON.toJSONString(arguments, filters));
+
         String[] excludeProperties = {"idCard", "phone", "email", "password"};
-        PropertyPreFilters filters = new PropertyPreFilters();
-        PropertyPreFilter.MySimplePropertyFilter excludefilter = filters.addFilter(0, excludeProperties);
-        excludefilter.addExcludes(excludeProperties);
-        logger.info("请求参数: {}", JSON.toJSONString(arguments, filters));
+        SimplePropertyPreFilter filter = new SimplePropertyPreFilter();
+        filter.getExcludes().addAll(Arrays.asList(excludeProperties));
+
+        logger.info("请求参数: {}", JSON.toJSONString(arguments, filter));
+
     }
 
     @Around("controllerPointcut()")
@@ -91,11 +102,17 @@ public class LogAspect {
         long startTime = System.currentTimeMillis();
         Object result = proceedomgJoinPoint.proceed();
         
+
+
+        // String[] excludeProperties = {"idCard", "phone", "email", "password"};
+        // PropertyPreFilters filters = new PropertyPreFilters();
+        // PropertyPreFilter.MySimplePropertyFilter excludefilter = filters.addFilter(0, excludeProperties);
+        // excludefilter.addExcludes(excludeProperties);
+        // logger.info("返回结果: {}", JSON.toJSONString(result, excludefilter));
         String[] excludeProperties = {"idCard", "phone", "email", "password"};
-        PropertyPreFilters filters = new PropertyPreFilters();
-        PropertyPreFilter.MySimplePropertyFilter excludefilter = filters.addFilter(0, excludeProperties);
-        excludefilter.addExcludes(excludeProperties);
-        logger.info("返回结果: {}", JSON.toJSONString(result, excludeFilters));
+        SimplePropertyPreFilter filter = new SimplePropertyPreFilter();
+        filter.getExcludes().addAll(Arrays.asList(excludeProperties));
+        logger.info("返回结果: {}", JSON.toJSONString(result, filter));
         logger.info("请求结束，耗时: {}ms", System.currentTimeMillis() - startTime);
         return result;
     }
